@@ -1,6 +1,193 @@
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const key = urlParams.get("k");
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Món quà nhỏ tặng Thầy Cô 20/11</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  document.body.innerHTML = `<h1>Key: ${key}</h1>`;
-</script>
+    <style>
+        /* --- CÀI ĐẶT CHUNG --- */
+        :root {
+            --primary-pink: #ff9a9e;
+            --soft-pink: #fad0c4;
+            --dark-text: #5a5a5a;
+            --accent: #d63384;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-image: linear-gradient(120deg, #fccb90 0%, #d57eeb 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--dark-text);
+            overflow: hidden; /* Ẩn thanh cuộn để đẹp hơn */
+        }
+
+        /* --- MÀN HÌNH CHỜ (HỘP QUÀ) --- */
+        #intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, #fad0c4 0%, #ffd1ff 100%);
+            z-index: 1000; /* Luôn nằm trên cùng */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease-out, visibility 0.8s;
+        }
+
+        .gift-box {
+            font-size: 100px;
+            cursor: pointer;
+            animation: shake 2s infinite; /* Hộp quà rung rinh */
+            transition: transform 0.3s;
+            user-select: none;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1);
+        }
+
+        .click-hint {
+            margin-top: 20px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+
+        /* --- KHUNG CHÍNH (CARD) - ẨN LÚC ĐẦU --- */
+        #main-card {
+            display: none; /* Ẩn đi ban đầu */
+            background-color: rgba(255, 255, 255, 0.95);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 35px rgba(255, 105, 135, 0.3);
+            text-align: center;
+            border: 2px solid #fff0f3;
+            position: relative;
+        }
+
+        /* Hiệu ứng hiện ra của tấm thiệp */
+        .pop-in {
+            animation: popUp 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        /* Các class CSS cũ của nội dung */
+        .decoration-icon { font-size: 50px; margin-bottom: 10px; display: inline-block; animation: float 3s ease-in-out infinite; }
+        h1 { font-family: 'Dancing Script', cursive; color: var(--accent); font-size: 3rem; margin-bottom: 10px; }
+        h2 { font-size: 1.1rem; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; border-bottom: 2px dashed var(--primary-pink); display: inline-block; padding-bottom: 5px; }
+        .message-box { background-color: #fff0f5; border-radius: 15px; padding: 25px; margin-bottom: 30px; border: 1px solid #ffc2d1; }
+        .poem { font-style: italic; color: var(--accent); font-size: 1.1rem; margin-bottom: 15px; }
+        .wishes { font-size: 1rem; line-height: 1.8; color: #444; }
+        .footer { margin-top: 30px; font-size: 0.9rem; color: #999; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            50% { transform: rotate(0eg); }
+            75% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes popUp {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="intro-screen" onclick="openGift()">
+        <div class="gift-box">🎁</div>
+        <p class="click-hint">Cô ơi, mở quà đi ạ! 👇</p>
+    </div>
+
+    <div id="main-card">
+        <div class="decoration-icon">💐</div>
+        
+        <h1>Tri Ân Thầy Cô</h1>
+        <h2>Happy Teachers' Day 20/11</h2>
+
+        <div class="message-box">
+            <p class="poem">
+                "Tháng mười một về, nắng ngả vàng,<br>
+                Lòng trò gửi trọn ngàn lời thương."
+            </p>
+            <hr style="border: 0; border-top: 1px solid #ffc2d1; margin: 15px 0;">
+            <p class="wishes">
+                Nhân ngày Nhà giáo Việt Nam, chúng em xin gửi đến Thầy/Cô món quà tinh thần nhỏ bé này. 
+                Cảm ơn Thầy/Cô vì những bài học hay và sự kiên nhẫn bao la. Chúc Thầy/Cô một ngày 20/11 thật nhiều niềm vui và nụ cười! ❤️
+            </p>
+        </div>
+
+        <div class="footer">
+            <p>From: Học trò ngoan của Cô/Thầy</p>
+        </div>
+    </div>
+
+    <script>
+        function openGift() {
+            const intro = document.getElementById('intro-screen');
+            const mainCard = document.getElementById('main-card');
+
+            // 1. Bắn pháo giấy (Confetti)
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 2000 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                // Bắn từ 2 bên
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+
+            // 2. Ẩn màn hình chờ và hiện thiệp
+            intro.style.opacity = '0';
+            intro.style.visibility = 'hidden'; // Ẩn hẳn để không bấm nhầm
+            
+            setTimeout(() => {
+                mainCard.style.display = 'block';
+                mainCard.classList.add('pop-in'); // Thêm hiệu ứng nảy ra
+            }, 300);
+        }
+    </script>
+
+</body>
+</html>
