@@ -1,102 +1,100 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nhận Key Kích Hoạt</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1a1a1a; /* Màu nền tối */
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #2d2d2d;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            text-align: center;
-            max-width: 90%;
-            width: 400px;
-        }
-        h2 { margin-bottom: 20px; color: #00ff88; }
-        .key-box {
-            background: #000;
-            border: 1px solid #444;
-            padding: 15px;
-            font-size: 24px;
-            font-family: 'Courier New', monospace; /* Font kiểu code */
-            color: #00ff88; /* Màu xanh hacker */
-            margin: 20px 0;
-            word-break: break-all;
-            border-radius: 5px;
-        }
-        .btn-copy {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
-        .btn-copy:hover { background-color: #0056b3; }
-        .error { color: #ff4444; }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>TNTOOL — Get Key</title>
+<style>
+  :root{--bg:#020204;--panel:#04110a;--accent:#00ff6a;--muted:#6fbf9a}
+  html,body{height:100%;margin:0;font-family:Inter, ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;background:radial-gradient(circle at 10% 10%, #001611, #000000 40%);color:#cfeee1}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{width:760px;max-width:92vw;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:28px;border:1px solid rgba(0,255,106,0.06);box-shadow:0 12px 50px rgba(0,0,0,0.7);display:flex;gap:20px;align-items:center}
+  .logo{width:140px;height:140px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:18px;background:linear-gradient(135deg,#00120a,#00221a);box-shadow:0 8px 40px rgba(0,255,106,0.06), inset 0 -8px 22px rgba(0,0,0,0.6);overflow:hidden}
+  .logo img{width:100%;height:100%;object-fit:cover;filter:drop-shadow(0 6px 20px rgba(0,255,106,0.08))}
+  .body{flex:1}
+  .title{font-size:18px;margin:0 0 6px;letter-spacing:1px;font-weight:bold;color:var(--accent)}
+  .subtitle{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .key-box{background:#001610;padding:18px;border-radius:10px;border:1px solid rgba(0,255,106,0.2);font-family:monospace;font-size:18px;word-break:break-all;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px; position: relative;}
+  .key-text{flex:1;color:#bfffd5;overflow:hidden; text-overflow: ellipsis; white-space: nowrap;}
+  .btn{background:linear-gradient(90deg,#00ff6a,#07b47a);border:none;padding:10px 18px;border-radius:8px;color:#001a10;font-weight:700;cursor:pointer;margin-left:8px; transition: 0.3s;}
+  .btn:hover{box-shadow: 0 0 15px var(--accent);}
+  .small{font-size:12px;color:var(--muted);margin-top:10px}
+  
+  /* Animation Neon */
+  @keyframes neon {0%,100%{text-shadow:0 0 6px rgba(0,255,106,0.6)}50%{text-shadow:0 0 18px rgba(0,255,106,0.95)}}
+  .title {animation:neon 3s infinite ease-in-out}
+  
+  @media (max-width:680px){.card{flex-direction:column;align-items:stretch; text-align:center}.logo{width:100px;height:100px; margin: 0 auto;}.key-box{font-size:14px; flex-direction: column;}.btn{width: 100%; margin-left:0; margin-top: 10px;}}
+</style>
 </head>
 <body>
-
-    <div class="container">
-        <h2>🔑 Key Của Bạn</h2>
-        <div id="display-key" class="key-box">Đang lấy key...</div>
-        
-        <button onclick="copyKey()" class="btn-copy">Sao chép Key</button>
-        <p id="status" style="margin-top: 10px; font-size: 14px; color: #aaa;"></p>
+<div class="wrap">
+  <div class="card">
+    <div class="logo">
+      <img src="z7255324665277_4785a2f455cfab3f7c32257523bfa2d3.jpg" alt="TNTOOL logo" onerror="this.style.display='none'; document.querySelector('.logo').innerText='TN'">
     </div>
 
-    <script>
-        // Hàm chạy ngay khi trang web tải xong
-        window.onload = function() {
-            // 1. Lấy toàn bộ URL hiện tại
-            const queryString = window.location.search;
-            
-            // 2. Phân tích chuỗi tham số (phần sau dấu ?)
-            const urlParams = new URLSearchParams(queryString);
-            
-            // 3. Lấy giá trị của tham số "key"
-            // Ví dụ link: .../index.html?key=ABCXYZ -> key sẽ là ABCXYZ
-            const key = urlParams.get('key');
+    <div class="body">
+      <h2 class="title">TNTOOL VERIFY</h2>
+      <p class="subtitle">HỆ THỐNG XÁC THỰC & LẤY KEY TỰ ĐỘNG</p>
 
-            const displayDiv = document.getElementById('display-key');
+      <div class="key-box">
+        <div class="key-text" id="keyText">Đang kiểm tra...</div>
+        <div>
+          <button class="btn" id="copyBtn">COPY KEY</button>
+        </div>
+      </div>
 
-            if (key) {
-                // Nếu tìm thấy key trên link, hiển thị nó ra
-                displayDiv.innerText = key;
-            } else {
-                // Nếu không có key trên link
-                displayDiv.innerText = "Lỗi: Không tìm thấy Key!";
-                displayDiv.classList.add("error");
-            }
-        };
+      <div class="small">TN TOOL <code>CHÍNH</code> HÃNG &copy; 2024</div>
+    </div>
+  </div>
+</div>
 
-        // Hàm copy key vào bộ nhớ đệm
-        function copyKey() {
-            const keyText = document.getElementById('display-key').innerText;
-            if (!keyText || keyText.includes("Lỗi")) return;
+<script>
+    // 1. Tự động chạy khi web tải xong
+    window.onload = function() {
+        // Lấy tham số từ URL
+        const params = new URLSearchParams(window.location.search);
+        const key = params.get('key'); // Lấy giá trị sau dấu ?key=
+        const display = document.getElementById('keyText');
 
-            navigator.clipboard.writeText(keyText).then(() => {
-                document.getElementById('status').innerText = "Đã sao chép vào bộ nhớ tạm!";
-                setTimeout(() => {
-                    document.getElementById('status').innerText = "";
-                }, 2000);
-            });
+        if (key) {
+            // Nếu có key trên link
+            display.innerText = key;
+            display.style.color = "#bfffd5"; // Màu xanh chuẩn
+        } else {
+            // Nếu không có key
+            display.innerText = "Lỗi: Không tìm thấy Key trên Link!";
+            display.style.color = "#ff5555"; // Màu đỏ báo lỗi
         }
-    </script>
+    };
+
+    // 2. Chức năng nút Copy
+    const copyBtn = document.getElementById('copyBtn');
+    const keyTextEl = document.getElementById('keyText');
+
+    copyBtn.addEventListener('click', () => {
+        const textToCopy = keyTextEl.innerText;
+        
+        // Kiểm tra nếu là thông báo lỗi thì không copy
+        if (textToCopy.includes("Lỗi") || textToCopy.includes("Đang kiểm tra")) {
+            alert("Không có key hợp lệ để copy!");
+            return;
+        }
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = "ĐÃ COPY!";
+            copyBtn.style.background = "#fff"; // Nháy sáng
+            
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+                copyBtn.style.background = "linear-gradient(90deg,#00ff6a,#07b47a)"; // Trả về màu cũ
+            }, 1500);
+        }).catch(err => {
+            alert("Lỗi copy: " + err);
+        });
+    });
+</script>
 </body>
 </html>
